@@ -1,14 +1,15 @@
 var express = require('express')
+var urlencode = require('urlencode')
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
+var twilio = require('twilio')
+var client = twilio((process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
 
 server.listen(process.env.PORT || 5000);
 
 //app.set('port', (process.env.PORT || 5000))
-app.use(express.urlencoded())
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
@@ -25,11 +26,11 @@ app.get('/handleSMS', function(request, response) {
 
         twiml.message(request.param('body'));
 
-        res.type('text/xml');
-        res.send(twiml.toString());
+        response.type('text/xml');
+        response.send(twiml.toString());
     }
     else {
-        res.send('you are not twilio.  Buzz off.');
+        response.send('you are not twilio.  Buzz off.');
     }
 })
 
