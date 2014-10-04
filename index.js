@@ -8,6 +8,7 @@ var client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
 server.listen(process.env.PORT || 5000);
 
 //app.set('port', (process.env.PORT || 5000))
+app.use(express.urlencoded())
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
@@ -19,7 +20,17 @@ app.get('/test', function(request, response) {
 })
 
 app.get('/handleSMS', function(request, response) {
-  console.log(request.params);
+  if (twilio.validateExpressRequest(request, process.env.AUTH_TOKEN)) {
+        var twiml = new twilio.TwimlResponse();
+
+        twiml.message(request.param('body'));
+
+        res.type('text/xml');
+        res.send(twiml.toString());
+    }
+    else {
+        res.send('you are not twilio.  Buzz off.');
+    }
 })
 
 app.get('/smsTest', function(request, response) {
