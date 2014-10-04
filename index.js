@@ -4,8 +4,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var twilio = require('twilio')
-var client = twilio((process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
+var twilio = require('twilio');
+var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
 server.listen(process.env.PORT || 5000);
 
