@@ -9,7 +9,10 @@
   "dependencies": {
     "express": "~4.9.x",
     "twilio": "1.7.0",
-    "socket.io": "1.1.0"
+    "socket.io": "1.1.0",
+    "urlencode": "0.2.0",
+    "json": "9.0.1",
+    "json-middleware": "1.0.2"
   },
   "engines": {
     "node": "0.10.x"

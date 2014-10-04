@@ -18,6 +18,10 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
+app.get('/handleSMS', function(request, response) {
+  console.log(request.params);
+})
+
 app.get('/smsTest', function(request, response) {
 	//Send an SMS text message
 client.sendMessage({
