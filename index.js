@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+var client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
 
 server.listen(process.env.PORT || 5000);
 
