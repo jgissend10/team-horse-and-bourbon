@@ -20,7 +20,7 @@ var cat;
       sceneCube = new THREE.Scene();
       scene.fog = new THREE.Fog( 0x87CEFB, 300, 600 );
       renderer.setClearColor( 0x87CEFB );
-      camera = new THREE.PerspectiveCamera(45, 1, 0.001, 700);
+      camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
       camera.position.set(0, 10, 0);
       scene.add(camera);
 
