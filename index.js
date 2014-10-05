@@ -121,8 +121,20 @@ io.on('connection', function (socket) {
   });
   socket.on('player', function (data) {
     console.log(data);
-    socket.emit('foundPlayer', "found")
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query("SELECT * FROM user_table WHERE phone = '" + data.phone + "' AND username ='"+ data.id +"'", function(err, result) {
+      done();
+      if (err)
+       { console.error(err); res.send("Error " + err); }
+      else
+       {
+       	if (typeof result.rows[0] != 'undefined') {
+       		socket.emit('foundPlayer', result.rows[0]);
+        }
+    });
   });
+  });
+
   socket.on('disconnect', function () {
     console.log("Disconnected");
    });

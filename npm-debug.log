@@ -1,0 +1,95 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/bin/npm', 'install', 'urlencoded' ]
+2 info using npm@2.0.2
+3 info using node@v0.10.30
+4 verbose readDependencies using package.json deps
+5 verbose cache add [ 'urlencoded', null ]
+6 verbose cache add spec="urlencoded" args=["urlencoded",null]
+7 verbose parsed spec { raw: 'urlencoded',
+7 verbose parsed spec   scope: null,
+7 verbose parsed spec   name: 'urlencoded',
+7 verbose parsed spec   rawSpec: '',
+7 verbose parsed spec   spec: '*',
+7 verbose parsed spec   type: 'range' }
+8 verbose parsed spec { raw: 'urlencoded',
+8 verbose parsed spec   scope: null,
+8 verbose parsed spec   name: 'urlencoded',
+8 verbose parsed spec   rawSpec: '',
+8 verbose parsed spec   spec: '*',
+8 verbose parsed spec   type: 'range' }
+9 verbose addNamed [ 'urlencoded', '*' ]
+10 verbose addNamed [ null, '*' ]
+11 silly lockFile 81a072f2-urlencoded urlencoded@*
+12 verbose lock urlencoded@* /home/jtgiss01/.npm/81a072f2-urlencoded.lock
+13 silly addNameRange { name: 'urlencoded', range: '*', hasData: false }
+14 verbose mapToRegistry name urlencoded
+15 verbose mapToRegistry uri https://registry.npmjs.org/urlencoded
+16 verbose request on initialization, where is /urlencoded
+17 verbose request after pass 1, where is /urlencoded
+18 verbose request url raw /urlencoded
+19 verbose request resolving registry [ 'https://registry.npmjs.org/', './urlencoded' ]
+20 verbose request after pass 2, where is https://registry.npmjs.org/urlencoded
+21 verbose request no auth needed
+22 info attempt registry request try #1 at 18:50:36
+23 verbose request id 74d7f3f0ee272c7a
+24 http request GET https://registry.npmjs.org/urlencoded
+25 http 404 https://registry.npmjs.org/urlencoded
+26 verbose headers { date: 'Sat, 04 Oct 2014 22:50:36 GMT',
+26 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+26 verbose headers   'content-type': 'application/json',
+26 verbose headers   'cache-control': 'max-age=0',
+26 verbose headers   'content-length': '52',
+26 verbose headers   'accept-ranges': 'bytes',
+26 verbose headers   via: '1.1 varnish',
+26 verbose headers   age: '0',
+26 verbose headers   'x-served-by': 'cache-iad2127-IAD',
+26 verbose headers   'x-cache': 'MISS',
+26 verbose headers   'x-cache-hits': '0',
+26 verbose headers   'x-timer': 'S1412463036.103713,VS0,VE96',
+26 verbose headers   'keep-alive': 'timeout=10, max=50',
+26 verbose headers   connection: 'Keep-Alive' }
+27 silly registry.get cb [ 404,
+27 silly registry.get   { date: 'Sat, 04 Oct 2014 22:50:36 GMT',
+27 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+27 silly registry.get     'content-type': 'application/json',
+27 silly registry.get     'cache-control': 'max-age=0',
+27 silly registry.get     'content-length': '52',
+27 silly registry.get     'accept-ranges': 'bytes',
+27 silly registry.get     via: '1.1 varnish',
+27 silly registry.get     age: '0',
+27 silly registry.get     'x-served-by': 'cache-iad2127-IAD',
+27 silly registry.get     'x-cache': 'MISS',
+27 silly registry.get     'x-cache-hits': '0',
+27 silly registry.get     'x-timer': 'S1412463036.103713,VS0,VE96',
+27 silly registry.get     'keep-alive': 'timeout=10, max=50',
+27 silly registry.get     connection: 'Keep-Alive' } ]
+28 silly lockFile 81a072f2-urlencoded urlencoded@*
+29 silly lockFile 81a072f2-urlencoded urlencoded@*
+30 verbose stack Error: 404 Not Found: urlencoded
+30 verbose stack     at RegClient.<anonymous> (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:258:14)
+30 verbose stack     at Request._callback (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:197:65)
+30 verbose stack     at Request.self.callback (/usr/lib/node_modules/npm/node_modules/request/request.js:237:22)
+30 verbose stack     at Request.emit (events.js:98:17)
+30 verbose stack     at Request.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:1146:14)
+30 verbose stack     at Request.emit (events.js:117:20)
+30 verbose stack     at IncomingMessage.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:1097:12)
+30 verbose stack     at IncomingMessage.emit (events.js:117:20)
+30 verbose stack     at _stream_readable.js:938:16
+30 verbose stack     at process._tickCallback (node.js:419:13)
+31 verbose statusCode 404
+32 verbose pkgid urlencoded
+33 verbose cwd /home/jtgiss01/workspace/teamHorseAndBourbon
+34 error Linux 3.16.2-201.fc20.x86_64
+35 error argv "node" "/usr/bin/npm" "install" "urlencoded"
+36 error node v0.10.30
+37 error npm  v2.0.2
+38 error code E404
+39 error 404 Not Found: urlencoded
+39 error 404
+39 error 404 'urlencoded' is not in the npm registry.
+39 error 404 You should bug the author to publish it (or use the name yourself!)
+39 error 404 It was specified as a dependency of 'teamHorseAndBourbon'
+39 error 404
+39 error 404 Note that you can also install from a
+39 error 404 tarball, folder, http url, or git url.
+40 verbose exit [ 1, true ]
