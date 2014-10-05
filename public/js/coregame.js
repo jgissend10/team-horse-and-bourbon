@@ -2,6 +2,7 @@ var camera, scene, renderer;
     var effect, controls;
     var element, container;
     var cameraOrtho, sceneOrtho;
+
     var clock = new THREE.Clock();
     var loader = new GSVPANO.PanoLoader();
 var test;
@@ -19,7 +20,12 @@ var m3d;
 var pointerDistance = 0;
 var ground;
 var enemy;
+var enemyList = new Array();
 var skybox;
+var fireball;
+var mainhealth =3;
+var done = 0;
+var sign = null;
     init();
     animate();
 
@@ -164,7 +170,7 @@ function ENEMY(){
     var boostspeedAdd = parseInt(Math.random()*6)-3;
     var health = 2+parseInt(Math.random()*5);
 
-    var type = 3;//1+parseInt(Math.random()*3);
+    var type = 1+parseInt(Math.random()*2);
 
     var color = 0;
     var colorTime = 0;
@@ -176,6 +182,15 @@ function ENEMY(){
 
     this.getmesh = function(){
       return mesh;
+    }
+    this.getHealth = function(){
+      return health;
+    }
+    this.getA = function(){
+      return a;
+    }
+    this.getD = function(){
+      return distanceFrom;
     }
 
     this.init = function(scene){
@@ -262,6 +277,42 @@ function ENEMY(){
 
 }
 
+function FIREBALL(tempa, tempd){
+     var a = tempa;
+     var distance = tempd;
+     var progress = 10;
+     var mesh;
+
+     this.init = function(){
+          var texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,0,0) );
+      
+          material = new THREE.SpriteMaterial( { map: texture } );
+          mesh = new THREE.Sprite( material );
+          mesh.material.color.setHex(0x66FF66);
+          mesh.scale.set( 5, 5, 1 );
+          mesh.material.opacity = .8;
+          scene.add(mesh);
+     }
+
+     this.update = function(delta){
+        delta = delta*1000;
+        //a += delta/10000;
+        var scale = distance*(1-(progress/100))
+        var x = scale*Math.sin(a*90* Math.PI / 180);
+        var z = scale*Math.cos(a*90* Math.PI / 180);
+        mesh.position.x = x;
+        mesh.position.z = z;
+        mesh.position.y = 10;
+        progress += delta/300;
+        if(progress > 90){
+          fireball = null;
+          scene.remove(mesh);
+          mainhealth--;
+        }  
+     }
+
+}
+
 
     function init() {
       var width = window.innerWidth;
@@ -300,12 +351,29 @@ function ENEMY(){
       camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
       camera.position.set(0, 20, 0);
 
-      skybox = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( createColorImage(64,127,127,127) ) } ) );
-      skybox.doubleSided = true;
-      scene.add( skybox );
+     // skybox = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( createColorImage(64,127,127,127) ) } ) );
+     // skybox.doubleSided = true;
+     // scene.add( skybox );
 
       enemy = new ENEMY();
       enemy.init(scene);
+
+      //var myLatlng = { lat: 51.50700703827454, lng: -0.12791916931155356 };
+      //loader.onPanoramaLoad = function() {
+       
+      //  skybox.material.map = new THREE.Texture( this.canvas ); 
+      //  skybox.material.map.needsUpdate = true;
+        
+      //};
+
+      //loader.load( myLatlng );
+     
+      for(var i=0;i<1+parseInt(Math.random()*2);i++){
+        enemy  = new ENEMY();
+        enemy.init(scene);
+        enemyList[enemyList.length] = enemy;
+      }
+      
 
       scene.add(camera);
       gui.init(scene);
@@ -372,26 +440,11 @@ function ENEMY(){
       textureBrown.minFilter = THREE.NearestFilter;
       textureBrown.magFilter = THREE.NearestFilter;
 
-      var shader = THREE.ShaderLib[ "cube" ];
-        shader.uniforms[ "tCube" ].value = reflectionCube;
-
-      var urls = [
-            createColorImage(64,255,255,0), createColorImage(64,255,255,255),
-            createColorImage(64,255,0,255), createColorImage(64,255,255,255),
-            createColorImage(64,0,255,255), createColorImage(64,0,255,0)
-          ];
-
-      var reflectionCube = THREE.ImageUtils.loadTextureCube( urls );
-      reflectionCube.format = THREE.RGBFormat;  
-
-      var shader = THREE.ShaderLib[ "cube" ];
-        shader.uniforms[ "tCube" ].value = reflectionCube;
-
-    
+      
+      
+      
 
       material  = new THREE.MeshBasicMaterial( { map: texture } );
-
-    
 
       var geometry = new THREE.PlaneGeometry(1000, 1000);
 
@@ -495,6 +548,20 @@ function ENEMY(){
       var raycaster = new THREE.Raycaster( camera.position, point );
       var intersects = raycaster.intersectObject( attackbtn1, true );
       var hit = false;
+
+      var point = new THREE.Vector3( 0, 0, -1 );
+      
+       point.applyQuaternion( camera.quaternion );
+      point.multiplyScalar(11);
+      point.addVectors(camera.position,point);
+      if(sign != null){
+        sign.position.x = point.x;
+        sign.position.z = point.z;
+        sign.position.y = point.y;
+        sign.lookAt(camera.position);
+      }
+        
+
       if(intersects.length > 0){
         pointerDistance = intersects[0].distance;
         hit = true;
@@ -512,7 +579,7 @@ function ENEMY(){
         pointerDistance = intersects[0].distance;
         
         hit = true;
-        gui.onCharge(2,dt);
+        gui.onCharge(1,dt);
         for(var i=0;i<attackbtn2.children.length;i++)
           attackbtn2.children[i].material.color.setHex(0xBBBBBB);
       }
@@ -524,33 +591,91 @@ function ENEMY(){
       if(intersects.length > 0){
         pointerDistance = intersects[0].distance;
         hit = true;
-        gui.onCharge(1,dt);
+        gui.onCharge(2,dt);
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xBBBBBB);
       }
       else
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xffFFFF);
-      intersects = raycaster.intersectObject( enemy.getmesh(), true );
-      if(!hit && intersects.length > 0){
-        pointerDistance = intersects[0].distance;
-        hit = true;
-        var damage = gui.onAttack(0,dt);
-        enemy.takeDamage(damage);
-        if(damage > 0)
-        enemy.getmesh().material.color.setHex(0xBBBBBB);
+      for(var i=0;i<enemyList.length;i++){  
+        enemy = enemyList[i];
+        intersects = raycaster.intersectObject( enemy.getmesh(), true );
+        if(!hit && intersects.length > 0){
+          pointerDistance = intersects[0].distance;
+          hit = true;
+          var damage = gui.onAttack(0,dt);
+          enemy.takeDamage(damage);
+          if(damage > 0)
+          enemy.getmesh().material.color.setHex(0xBBBBBB);
+        }
+        else{
+          enemy.getmesh().material.color.setHex(0xFFFFFF);
+        }  
+
       }
-      else{
-        enemy.getmesh().material.color.setHex(0xFFFFFF);
-      }  
+
+
       intersects = raycaster.intersectObject( ground, true );
       if(!hit && intersects.length > 0){
         pointerDistance = intersects[0].distance;
       }  
-
-      
+      if(fireball != null)
+        fireball.update(dt);
+      else if(Math.random()>.98 && enemyList.length > 0){
+        var value = parseInt(enemyList.length*Math.random());
+        fireball = new FIREBALL(enemyList[value].getA(), enemyList[value].getD());
+        fireball.init();
+      }
       cat.lookAt(camera.position);
-      enemy.update(dt);
+      for(var i=0;i<enemyList.length;i++)
+        enemyList[i].update(dt);
+      for(var i=0;i<enemyList.length;i++)
+        if(enemyList[i].getHealth()==0){
+        enemyList.splice(i, 1);
+        i--;
+        }
+       if(enemyList.length<=0){
+        fireball = null;
+        done = 1;
+       } 
+       if(mainhealth <= 0)
+          done =2;
+        if(done >0){
+          var t1 = THREE.ImageUtils.loadTexture(
+        createWinImage()
+      );
+          if(done == 2)t1 = THREE.ImageUtils.loadTexture(
+        createLoseImage()
+      );
+          m1  = new THREE.MeshBasicMaterial( { map: t1 } );
+          sign  = new THREE.Mesh( new THREE.BoxGeometry( 11,11, 0 ), m1 );
+          scene.add(sign);
+
+        }
+
+        if(mainhealth == 3)
+        {
+          scene.fog = new THREE.Fog( 0x87CEFB, 300, 600 );
+          renderer.setClearColor( 0x87CEFB );
+        }
+        if(mainhealth == 2)
+        {
+          scene.fog = new THREE.Fog( 0x87CEFB, 300, 600 );
+          renderer.setClearColor( 0x579ECB );
+        }
+        if(mainhealth == 1)
+        {
+          scene.fog = new THREE.Fog( 0x87CEFB, 300, 600 );
+          renderer.setClearColor( 0x275E8B );
+        }
+        if(mainhealth == 0)
+        {
+          scene.fog = new THREE.Fog( 0x000000, 300, 600 );
+          renderer.setClearColor( 0x000000 );
+        }
+
+     // enemy.update(dt);
       gui.update(dt);
     }
 
