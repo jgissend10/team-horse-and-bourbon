@@ -40,11 +40,22 @@ app.get('/db', function (request, response) {
 app.post('/handleSMS', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
   var resp = new twilio.TwimlResponse();
-  resp.message(req.body.Body + " " + req.body.From);
-  res.writeHead(200, {
-        'Content-Type':'text/xml'
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query("SELECT username FROM user_table WHERE phone = '" + req.body.From + "'", function(err, result) {
+      done();
+      if (err)
+       { console.error(err); response.send("Error " + err); }
+      else
+       {
+       	resp.message("Welcome back! " + result.rows[0]);
+  		res.writeHead(200, {
+        	'Content-Type':'text/xml'
+    	});
+  		res.end(resp.toString()); 
+        }
     });
-  res.end(resp.toString());
+  });
+  
 })
 
 app.get('/smsTest', function(request, response) {
