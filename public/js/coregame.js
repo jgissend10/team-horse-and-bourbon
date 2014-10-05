@@ -338,7 +338,7 @@ function FIREBALL(tempa, tempd){
         };
 
         // Invoke the load method with a LatLng point.
-      loader.load( new google.maps.LatLng( 51.50700703827454, -0.12791916931155356 ) );
+      //loader.load( new google.maps.LatLng( 51.50700703827454, -0.12791916931155356 ) );
       container.appendChild(element);
       gui = new GUI();
 

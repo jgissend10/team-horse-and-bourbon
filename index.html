@@ -21,6 +21,9 @@
   <body>
     <div id="example"></div>
 
+
+<script src="socket.io/socket.io.js"></script>
+
   <script src="js/third-party/threejs/three.min.js"></script>
   <script src="js/third-party/threejs/StereoEffect.js"></script>
   <script src="js/third-party/threejs/DeviceOrientationControls.js"></script>
@@ -30,6 +33,52 @@
   <script src="js/imageStuff.js"></script>
   <script src="GSVPano.js"></script>
   <script src="js/coregame.js"></script>
+
+  <script>
+  var socket = io();
+
+  var search = window.location.search.split("&");
+  var id = search[0].substr(4);
+  var ph = search[1].substr(6);
+  socket.emit('player', {'id': id, 'phone': ph});
+
+  // Create a PanoLoader object
+  var loader = new GSVPANO.PanoLoader();
+
+  // Implement the onPanoramaLoad handler
+  loader.onPanoramaLoad = function() {
+
+    /*
+        Do your thing with the panorama:
+        this.canvas: an HTML5 canvas with the texture
+        this.copyright: the copyright of the images
+    */
+
+  };
+  socket.on('foundPlayer', function(data) {
+  console.log(data);
+  function getLocation() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+      } else { 
+          x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+  }
+
+  function showPosition(position) {
+      x.innerHTML="Latitude: " + position.coords.latitude + 
+      "<br>Longitude: " + position.coords.longitude;
+      console.log(position);
+      socket.emit('location', position);  
+
+     // Invoke the load method with a LatLng point
+      loader.load( new google.maps.LatLng( position.coords.latitude, position.coords.longitude ) );
+  }
+  //window.setInterval(function() {getLocation();}, 1000);
+});
+  
+
+</script>
   
   </body>
 </html>

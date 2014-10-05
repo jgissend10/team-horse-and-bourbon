@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var url  = require('url');
-var database = false;
+var database = true;
 
 server.listen(process.env.PORT || 5000);
 
@@ -113,7 +113,7 @@ app.get('/game', function (req, res) {
 	/*var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
   	res.send(query);*/
-  	res.sendFile(__dirname + '/game.html')
+  	res.sendFile(__dirname + '/index.html')
 })
 
 io.on('connection', function (socket) {
