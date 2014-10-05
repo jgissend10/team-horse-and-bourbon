@@ -561,7 +561,7 @@ function FIREBALL(tempa, tempd){
         sign.lookAt(camera.position);
       }
         
-
+      if(done >0)return;
       if(intersects.length > 0){
         pointerDistance = intersects[0].distance;
         hit = true;
