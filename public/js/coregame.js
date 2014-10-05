@@ -604,7 +604,7 @@ function FIREBALL(tempa, tempd){
       else
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xffFFFF);
-      if(fireball != null){}  
+      if(fireball != null){
         intersects = raycaster.intersectObject( fireball.getmesh(), true );
         if(intersects.length > 0){
           pointerDistance = intersects[0].distance;
