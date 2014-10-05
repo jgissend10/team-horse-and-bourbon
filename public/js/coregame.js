@@ -315,6 +315,12 @@ function FIREBALL(tempa, tempd){
         }  
      }
 
+     this.remove = function(){
+        fireball = null;
+          scene.remove(mesh);
+        
+     }
+
 }
 
 
@@ -611,7 +617,7 @@ function FIREBALL(tempa, tempd){
           hit = true;
           var damage = gui.onAttack(0,dt);
           if(damage > 0)
-            fireball = null;
+            fireball.remove();
         }  
       }
       for(var i=0;i<enemyList.length;i++){  
@@ -652,7 +658,7 @@ function FIREBALL(tempa, tempd){
         i--;
         }
        if(enemyList.length<=0){
-        fireball = null;
+        fireball.remove();
         done = 1;
        } 
        if(mainhealth <= 0)
