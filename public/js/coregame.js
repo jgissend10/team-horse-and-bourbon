@@ -410,7 +410,7 @@ function FIREBALL(tempa, tempd){
         light.position.set( 0, 500, 0 );
         scene.add( light );
 
-      var mapB = THREE.ImageUtils.loadTexture( "img/test.jpg" );
+      var mapB = THREE.ImageUtils.loadTexture( "img/cat.jpg" );
       var materialB = new THREE.SpriteMaterial( { map: mapB} );
 
       material = materialB.clone();
