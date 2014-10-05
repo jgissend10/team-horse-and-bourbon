@@ -48,25 +48,32 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
       else
        {
        	if (typeof result.rows[0] != 'undefined') {
-       		resp.message("Welcome back! " + result.rows[0].username);
+       		resp.message("http://team-horse-and-bourbon.heroku.com/game?id="+result.rows[0].username+"&phone="+req.body.From);
   			res.writeHead(200, {
         		'Content-Type':'text/xml'
     		});
   			res.end(resp.toString());
        		} else {
-       			resp.message("You're not registered yet!");
-  				res.writeHead(200, {
-        			'Content-Type':'text/xml'
-    			});
-  				res.end(resp.toString());
-       		}
-       	
+       		var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+       		client.query("INSERT ('" + id +"', '" + req.body.From +"', 0) INTO user_table", function(err, result) {
+      			done();
+      			if (err)
+      			 { console.error(err); response.send("Error " + err); }
+      			else
+       			{
+	       		resp.message("http://team-horse-and-bourbon.heroku.com/game?id="+id+"&phone="+req.body.From);
+	  			res.writeHead(200, {
+	        		'Content-Type':'text/xml'
+	    		});
+	  			res.end(resp.toString());
+       			}
+        	})}
         }
     });
   });
-  
 })
 
+/*
 app.get('/smsTest', function(request, response) {
 	//Send an SMS text message
 client.sendMessage({
@@ -90,6 +97,7 @@ client.sendMessage({
     }
 });
 })
+*/
 
 io.on('connection', function (socket) {
   socket.on('location', function (data) {
