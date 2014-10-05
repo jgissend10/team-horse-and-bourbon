@@ -112,7 +112,7 @@ function GUI(){
       scene.fog = new THREE.Fog( 0x87CEFB, 300, 600 );
       renderer.setClearColor( 0x87CEFB );
       camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
-      camera.position.set(0, 10, 0);
+      camera.position.set(0, 20, 0);
 
 
       
@@ -234,12 +234,13 @@ function GUI(){
       var m3  = new THREE.MeshBasicMaterial( { map: t3 } );
 
       for(var a = 0;a<4;a++){
-        var scale = 6;
+        var scale = 15;
         var offset = 30;
-        var width = 2.6;
+        var width = 6.6;
+        var height = 4;
         var x = scale*Math.sin(a*90* Math.PI / 180);
         var z = scale*Math.cos(a*90* Math.PI / 180);
-        var mesh = new THREE.Mesh( new THREE.BoxGeometry( width, 2, 1 ), m1 );
+        var mesh = new THREE.Mesh( new THREE.BoxGeometry( width, height, 0 ), m1 );
 
         mesh.position.set( x , 5, z );
         mesh.lookAt(camera.position);
@@ -247,7 +248,7 @@ function GUI(){
 
         x = scale*Math.sin((a*90+offset)* Math.PI / 180);
         z = scale*Math.cos((a*90+offset)* Math.PI / 180);
-        mesh = new THREE.Mesh( new THREE.BoxGeometry( width, 2, 1 ), m2 );
+        mesh = new THREE.Mesh( new THREE.BoxGeometry( width, height, 0 ), m2 );
 
         mesh.position.set( x , 5, z );
         mesh.lookAt(camera.position);
@@ -255,7 +256,7 @@ function GUI(){
 
         x = scale*Math.sin((a*90+offset+offset)* Math.PI / 180);
         z = scale*Math.cos((a*90+offset+offset)* Math.PI / 180);
-        mesh = new THREE.Mesh( new THREE.BoxGeometry( width, 2, 1 ), m3 );
+        mesh = new THREE.Mesh( new THREE.BoxGeometry( width, height, 0 ), m3 );
 
         mesh.position.set( x , 5, z );
         mesh.lookAt(camera.position);
