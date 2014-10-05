@@ -24,7 +24,7 @@ var skybox;
 var fireball;
 var mainhealth =3;
 var done = 0;
-var sign = 0;
+var sign = null;
     init();
     animate();
 
