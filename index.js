@@ -1,8 +1,8 @@
 var express = require('express')
-var urlencode = require('urlencode')
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var bodyParser = require('body-parser');
 
 var twilio = require('twilio');
 var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
@@ -12,6 +12,9 @@ server.listen(process.env.PORT || 5000);
 //app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
+// parse application/json
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/index.html')
 })
@@ -20,14 +23,14 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
-app.post('/handleSMS', function(request, response) {
-    var twiml = new twilio.TwimlResponse();
-
-    twiml.message(request.param('body'));
-
-    response.type('text/xml');
-    response.send(twiml.toString());
-    
+app.post('/handleSMS', urlencodedParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  var resp = new twilio.TwimlResponse();
+  resp.message(req.body.body);
+  res.writeHead(200, {
+        'Content-Type':'text/xml'
+    });
+  res.end(resp.toString());
 })
 
 app.get('/smsTest', function(request, response) {
