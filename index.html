@@ -35,14 +35,14 @@
   <script src="js/coregame.js"></script>
 
   <script>
-  var socket = io();
+  //var socket = io();
 
-  var search = window.location.search.split("&");
-  var id = search[0].substr(4);
-  var ph = search[1].substr(6);
-  socket.emit('player', {'id': id, 'phone': ph});
+  //var search = window.location.search.split("&");
+  //var id = search[0].substr(4);
+  //var ph = search[1].substr(6);
+  //socket.emit('player', {'id': id, 'phone': ph});
 
-  socket.on('foundPlayer', function(data) {
+  //socket.on('foundPlayer', function(data) {
   console.log(data);
   function getLocation() {
       if (navigator.geolocation) {
@@ -56,15 +56,14 @@
       //x.innerHTML="Latitude: " + position.coords.latitude + 
       //"<br>Longitude: " + position.coords.longitude;
       console.log(position);
-      socket.emit('location', position);  
+      //socket.emit('location', position);  
 
      // Invoke the load method with a LatLng point
       loader.load( new google.maps.LatLng( position.coords.latitude, position.coords.longitude ) );
   }
   getLocation();
-});
+//});
   
-
 </script>
   
   </body>
