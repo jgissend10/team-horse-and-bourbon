@@ -4,6 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var url  = require('url');
+var database = false;
 
 server.listen(process.env.PORT || 5000);
 
@@ -21,7 +22,7 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
-if (true) { // make true for db
+if (database) { // make true for db
 var twilio = require('twilio');
 var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
@@ -121,7 +122,8 @@ io.on('connection', function (socket) {
   });
   socket.on('player', function (data) {
     console.log(data);
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    if (database){
+    	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     client.query("SELECT * FROM user_table WHERE phone = '" + data.phone + "' AND username ='"+ data.id +"'", function(err, result) {
       done();
       if (err)
@@ -133,7 +135,9 @@ io.on('connection', function (socket) {
         }
     }
     });
-  });
+  });} else {
+    		socket.emit('foundPlayer', "faker");
+    	}
 });
 
   socket.on('disconnect', function () {
