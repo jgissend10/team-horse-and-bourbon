@@ -609,6 +609,7 @@ function FIREBALL(tempa, tempd){
         if(intersects.length > 0){
           pointerDistance = intersects[0].distance;
           hit = true;
+          var damage = gui.onAttack(0,dt);
           if(damage > 0)
             fireball = null;
         }  
