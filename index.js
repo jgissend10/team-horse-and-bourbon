@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var url  = require('url');
-var database = true;
+var database = false;
 
 server.listen(process.env.PORT || 5000);
 

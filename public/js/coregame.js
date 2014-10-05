@@ -2,8 +2,8 @@ var camera, scene, renderer;
     var effect, controls;
     var element, container;
     var cameraOrtho, sceneOrtho;
-var loader = new GSVPANO.PanoLoader();
     var clock = new THREE.Clock();
+    var loader = new GSVPANO.PanoLoader();
 var test;
 var cat;
 var attackbtn1;
@@ -270,6 +270,24 @@ function ENEMY(){
       renderer = new THREE.WebGLRenderer();
       element = renderer.domElement;
       container = document.getElementById('example');
+      loader.onPanoramaLoad = function () {
+            var img_uri= this.canvas.toDataURL("image/png");
+            var image = new Image();
+            image.src =img_uri;
+            
+            var sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(100, 32, 32),
+            new THREE.MeshBasicMaterial({
+              map: THREE.ImageUtils.loadTexture(img_uri)
+              })
+            );
+            sphere.scale.x = -1;
+            scene.add(sphere);
+
+        };
+
+        // Invoke the load method with a LatLng point.
+      loader.load( new google.maps.LatLng( 51.50700703827454, -0.12791916931155356 ) );
       container.appendChild(element);
       gui = new GUI();
 
@@ -286,15 +304,6 @@ function ENEMY(){
       skybox.doubleSided = true;
       scene.add( skybox );
 
-      var myLatlng = { lat: 51.50700703827454, lng: -0.12791916931155356 };
-      loader.onPanoramaLoad = function() {
-       
-        skybox.material.map = new THREE.Texture( this.canvas ); 
-        skybox.material.map.needsUpdate = true;
-        
-      };
-
-      //loader.load( myLatlng );
       enemy = new ENEMY();
       enemy.init(scene);
 
