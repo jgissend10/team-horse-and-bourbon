@@ -325,7 +325,7 @@ function FIREBALL(tempa, tempd){
       renderer = new THREE.WebGLRenderer();
       element = renderer.domElement;
       container = document.getElementById('example');
-      loader.setZoom( 1 );
+      /*loader.setZoom( 1 );
       loader.onPanoramaLoad = function () {
             var img_uri= this.canvas.toDataURL("image/png");
             var image = new Image();
@@ -344,6 +344,7 @@ function FIREBALL(tempa, tempd){
 
         // Invoke the load method with a LatLng point.
       //loader.load( new google.maps.LatLng( 51.50700703827454, -0.12791916931155356 ) );
+      */
       container.appendChild(element);
       gui = new GUI();
 
