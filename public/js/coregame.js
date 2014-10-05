@@ -16,6 +16,9 @@ var m3;
 var m1d;
 var m2d;
 var m3d;
+var pointerDistance = 0;
+var ground;
+var enemy;
     init();
     animate();
 
@@ -98,7 +101,7 @@ function GUI(){
       }
       var point = new THREE.Vector3( 0, 0, -1 );
       point.applyQuaternion( camera.quaternion );
-      point.multiplyScalar(20);
+      point.multiplyScalar(pointerDistance-1);
       point.addVectors(camera.position,point);
      // mesh.position.set(,point.y,point.z);//= new THREE.Vector3( 4, 5, -1 );//;
       mesh.position.x = point.x;
@@ -110,6 +113,46 @@ function GUI(){
     }
 
   
+}
+
+
+function ENEMY(){
+    
+    var mesh;
+    var a = 0;
+
+    this.getmesh = function(){
+      return mesh;
+    }
+
+    this.init = function(scene){
+      var texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,0,0) );
+      var material = new THREE.SpriteMaterial( { map: texture } );
+      var geometry = new THREE.PlaneGeometry(15, 15);
+
+     mesh = new THREE.Mesh( new THREE.BoxGeometry( 7, 7, 4 ), m1 );
+
+      //mesh.scale.set( 10, 10, 1 );
+      //this.mesh. = -Math.PI / 2;
+
+      scene.add(mesh);
+
+    }
+
+    this.update = function(delta){
+      delta = delta*1000;
+      var scale = 40;
+      a +=delta/10000;
+      var x = scale*Math.sin(a*90* Math.PI / 180);
+      var z = scale*Math.cos(a*90* Math.PI / 180);
+
+      mesh.position.x = x;
+      mesh.position.z = z;
+      mesh.position.y = 10;
+      
+      mesh.lookAt(new THREE.Vector3(0, 4, 0));
+    }
+
 }
 
 
@@ -133,7 +176,8 @@ function GUI(){
       camera.position.set(0, 20, 0);
 
 
-      
+      enemy = new ENEMY();
+      enemy.init(scene);
 
       scene.add(camera);
       gui.init(scene);
@@ -223,9 +267,9 @@ function GUI(){
 
       var geometry = new THREE.PlaneGeometry(1000, 1000);
 
-      var mesh = new THREE.Mesh(geometry, material);
-      mesh.rotation.x = -Math.PI / 2;
-      scene.add(mesh);
+      ground = new THREE.Mesh(geometry, material);
+      ground.rotation.x = -Math.PI / 2;
+      scene.add(ground);
       
 
       loadAttackButtons(scene, camera);
@@ -322,8 +366,11 @@ function GUI(){
       //point.applyMatrix4( camera.matrixWorld );
       var raycaster = new THREE.Raycaster( camera.position, point );
       var intersects = raycaster.intersectObject( attackbtn1, true );
+      var hit = false;
       if(intersects.length > 0){
-        console.log("RED");
+        pointerDistance = intersects[0].distance;
+        hit = true;
+    
         gui.onCharge(0,dt);
         for(var i=0;i<attackbtn1.children.length;i++)
           attackbtn1.children[i].material.color.setHex(0xBBBBBB);
@@ -334,7 +381,9 @@ function GUI(){
         
       intersects = raycaster.intersectObject( attackbtn2, true );
       if(intersects.length > 0){
-        console.log("GREEN");
+        pointerDistance = intersects[0].distance;
+        
+        hit = true;
         gui.onCharge(1,dt);
         for(var i=0;i<attackbtn2.children.length;i++)
           attackbtn2.children[i].material.color.setHex(0xBBBBBB);
@@ -345,7 +394,8 @@ function GUI(){
 
       intersects = raycaster.intersectObject( attackbtn3, true );
       if(intersects.length > 0){
-        console.log("BLUE");
+        pointerDistance = intersects[0].distance;
+        hit = true;
         gui.onCharge(2,dt);
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xBBBBBB);
@@ -353,9 +403,23 @@ function GUI(){
       else
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xffFFFF);
+      intersects = raycaster.intersectObject( enemy.getmesh(), true );
+      if(!hit && intersects.length > 0){
+        pointerDistance = intersects[0].distance;
+        hit = true;
+        enemy.getmesh().material.color.setHex(0xBBBBBB);
+      }
+      else{
+        enemy.getmesh().material.color.setHex(0xFFFFFF);
+      }  
+      intersects = raycaster.intersectObject( ground, true );
+      if(!hit && intersects.length > 0){
+        pointerDistance = intersects[0].distance;
+      }  
 
       
       cat.lookAt(camera.position);
+      enemy.update(dt);
       gui.update(dt);
     }
 
