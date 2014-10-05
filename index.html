@@ -42,19 +42,6 @@
   var ph = search[1].substr(6);
   socket.emit('player', {'id': id, 'phone': ph});
 
-  // Create a PanoLoader object
-  var loader = new GSVPANO.PanoLoader();
-
-  // Implement the onPanoramaLoad handler
-  loader.onPanoramaLoad = function() {
-
-    /*
-        Do your thing with the panorama:
-        this.canvas: an HTML5 canvas with the texture
-        this.copyright: the copyright of the images
-    */
-
-  };
   socket.on('foundPlayer', function(data) {
   console.log(data);
   function getLocation() {
