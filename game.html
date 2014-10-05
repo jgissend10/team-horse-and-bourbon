@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="demo">Click the button to get your coordinates:</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<script src="https://cdn.socket.io/socket.io-1.1.0.js"></script>
+<script>
+  var socket = io.connect('http://localhost');
+  var x = document.getElementById("demo");
+
+  var search = window.location.search.split("&");
+  var id = search[0].substr(4);
+  var ph = search[1].substr(6);
+  socket.emit('player', {'id': id, 'phone': ph});
+  function getLocation() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+      } else { 
+          x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+  }
+
+  function showPosition(position) {
+      x.innerHTML="Latitude: " + position.coords.latitude + 
+      "<br>Longitude: " + position.coords.longitude;
+      socket.emit('location', position);	
+  }
+  window.setInterval(function() {getLocation();}, 1000);
+</script>
+</body>
+</html>

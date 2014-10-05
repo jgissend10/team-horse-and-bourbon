@@ -21,7 +21,7 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
-if (true) { // make true for db
+if (false) { // make true for db
 var twilio = require('twilio');
 var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
@@ -109,9 +109,10 @@ client.sendMessage({
 }
 
 app.get('/game', function (req, res) {
-	var url_parts = url.parse(req.url, true);
+	/*var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
-  	res.send(query);
+  	res.send(query);*/
+  	res.sendFile(__dirname + '/game.html')
 })
 
 io.on('connection', function (socket) {
