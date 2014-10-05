@@ -604,13 +604,15 @@ function FIREBALL(tempa, tempd){
       else
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xffFFFF);
-      intersects = raycaster.intersectObject( fireball.getmesh(), true );
-      if(intersects.length > 0){
-        pointerDistance = intersects[0].distance;
-        hit = true;
-        if(damage > 0)
-          fireball = null;
-      }  
+      if(fireball != null){}  
+        intersects = raycaster.intersectObject( fireball.getmesh(), true );
+        if(intersects.length > 0){
+          pointerDistance = intersects[0].distance;
+          hit = true;
+          if(damage > 0)
+            fireball = null;
+        }  
+      }
       for(var i=0;i<enemyList.length;i++){  
         enemy = enemyList[i];
         intersects = raycaster.intersectObject( enemy.getmesh(), true );
