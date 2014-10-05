@@ -33,11 +33,13 @@ function GUI(){
 
     this.attackFocus = 0;
     this.attack = 0;
-    this.attackMax = 2000;
+    this.attackMax = 1000;
 
     this.didMove = false;
 
     var mesh;
+    var mesh2;
+    var mesh3;
 
     this.onCharge = function(num, delta){
       if(this.active != 0)
@@ -45,16 +47,24 @@ function GUI(){
       if(num != this.progressFocus){
         this.progressFocus = num;
         this.progress = 0;
+
       }
+      if(num==0)mesh2.material.color.setHex(0xFF6666);
+      if(num==1)mesh2.material.color.setHex(0x66FF66);
+      if(num==2)mesh2.material.color.setHex(0x6666FF);
       this.progress += delta*1000;
-      if(this.progress >= this.progressMAX)
+      if(this.progress >= this.progressMAX){
         this.active = this.activeMax;
+        mesh2.material.opacity = 1;
+      }
       this.didMove = true;
 
     }
 
     this.onAttack = function(num, delta){
+      var damage = 0;
       if(this.active <= 0){
+        mesh2.material.opacity = 0;
         this.active = 0;
         return;
       }
@@ -62,40 +72,55 @@ function GUI(){
         this.attackFocus = num;
         this.attack = 0;
       }
-      this.attack += delta;
-      if(this.attack >= this.attackMax)
-        Console.log("Hit ;)");
+      this.attack += delta*1000;
+      if(this.attack >= this.attackMax){
+        //Console.log("Hit ;)");
+        damage = 3;
+        this.attack = 0;
+        this.active = 0;
+        this.progress = 0;
+      }
       this.didMove = true;
+      return damage;
     }
 
     this.init = function(scene){
 
       var texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,255,255) );
       var material = new THREE.SpriteMaterial( { map: texture } );
-      var geometry = new THREE.PlaneGeometry(5, 5);
+      var geometry = new THREE.PlaneGeometry(18, 18);
 
       mesh = new THREE.Sprite( material );
-      
+      texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,255,255) );
+      material = new THREE.SpriteMaterial( { map: texture } );
+      mesh2 = new THREE.Sprite( material );
       //this.mesh. = -Math.PI / 2;
-
+      mesh.scale.set( 1, 1, 1 );
+      mesh2.scale.set( 1.5, 1.5, 1 );
+      mesh2.material.opacity = 0;
+      mesh2.material.color.setHex(0xFFBBBB);
       scene.add(mesh);
-
+      scene.add(mesh2);
     }
 
     this.update = function(delta){
       delta = delta*1000;
+
       if(!this.didMove){
         if(this.active != 0)
         {
            this.active -= delta;
            if(this.active <= 0){
               this.active = 0;
+              this.progress = 0;
+              mesh2.material.opacity = 0;
             }
         }
         else{
            this.progress -= delta;
            if(this.progress < 0)
               this.progress = 0;
+
            
         }
       }
@@ -109,6 +134,13 @@ function GUI(){
       mesh.position.y = point.y;
       mesh.lookAt(camera.position);
       mesh.material.opacity = this.progress*1.0/this.progressMAX;
+      var duck = 1*(this.active*1.0/this.activeMax);
+      mesh2.scale.set( 1+duck, 1+duck, 1 );
+      mesh2.position.x = point.x;
+      mesh2.position.z = point.z;
+      mesh2.position.y = point.y;
+      mesh2.lookAt(camera.position);
+
       this.didMove = false;
     }
 
@@ -120,6 +152,7 @@ function ENEMY(){
     
     var mesh;
     var a = 0;
+    var speed = 1.0;
 
     this.getmesh = function(){
       return mesh;
@@ -142,7 +175,7 @@ function ENEMY(){
     this.update = function(delta){
       delta = delta*1000;
       var scale = 40;
-      a +=delta/10000;
+      a +=delta/10000*speed;
       var x = scale*Math.sin(a*90* Math.PI / 180);
       var z = scale*Math.cos(a*90* Math.PI / 180);
 
@@ -151,6 +184,11 @@ function ENEMY(){
       mesh.position.y = 10;
       
       mesh.lookAt(new THREE.Vector3(0, 4, 0));
+      speed = 1;
+    }
+
+    this.takeDamage = function(damage){
+      speed = 4.1;
     }
 
 }
@@ -407,6 +445,9 @@ function ENEMY(){
       if(!hit && intersects.length > 0){
         pointerDistance = intersects[0].distance;
         hit = true;
+        var damage = gui.onAttack(0,dt);
+        enemy.takeDamage(damage);
+        if(damage > 0)
         enemy.getmesh().material.color.setHex(0xBBBBBB);
       }
       else{
