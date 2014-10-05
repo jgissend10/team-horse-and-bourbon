@@ -15,6 +15,7 @@
   var id = search[0].substr(4);
   var ph = search[1].substr(6);
   socket.emit('player', {'id': id, 'phone': ph});
+  socket.on('foundPlayer', function(data) {
   function getLocation() {
       if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(showPosition);
@@ -28,7 +29,7 @@
       "<br>Longitude: " + position.coords.longitude;
       socket.emit('location', position);	
   }
-  window.setInterval(function() {getLocation();}, 1000);
+  window.setInterval(function() {getLocation();}, 1000);});
 </script>
 </body>
 </html>

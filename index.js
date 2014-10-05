@@ -121,6 +121,7 @@ io.on('connection', function (socket) {
   });
   socket.on('player', function (data) {
     console.log(data);
+    socket.emit('foundPlayer', "found")
   });
   socket.on('disconnect', function () {
     console.log("Disconnected");
