@@ -131,9 +131,10 @@ io.on('connection', function (socket) {
        	if (typeof result.rows[0] != 'undefined') {
        		socket.emit('foundPlayer', result.rows[0]);
         }
+    }
     });
   });
-  });
+});
 
   socket.on('disconnect', function () {
     console.log("Disconnected");
