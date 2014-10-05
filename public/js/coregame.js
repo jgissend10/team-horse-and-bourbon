@@ -83,7 +83,7 @@ function GUI(){
       var point = new THREE.Vector3( 0, 0, -1 );
       point.applyQuaternion( camera.quaternion );
       point.multiplyScalar(5);
-      point.addVectors(camera.position,point);
+      point.subVectors(camera.position,point);
      // mesh.position.set(,point.y,point.z);//= new THREE.Vector3( 4, 5, -1 );//;
       mesh.position.x = point.x;
       mesh.position.z = point.z;
