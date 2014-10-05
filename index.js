@@ -3,11 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
-
-var twilio = require('twilio');
-var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
-
-var pg = require('pg');
+var url  = require('url');
 
 server.listen(process.env.PORT || 5000);
 
@@ -24,6 +20,13 @@ app.get('/', function(request, response) {
 app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
+
+if (true) { // make true for db
+var twilio = require('twilio');
+var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+
+var pg = require('pg');
+
 
 app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -103,10 +106,13 @@ client.sendMessage({
 })
 */
 
-app.get('/game', urlencodedParser, function (req, res) {
-  if (!req.body) return res.sendStatus(400)
-  res.send(req.body.id + " " + req.body.phone);
- })
+}
+
+app.get('/game', function (req, res) {
+	var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+  	res.send(query);
+})
 
 io.on('connection', function (socket) {
   socket.on('location', function (data) {
