@@ -321,6 +321,7 @@ function FIREBALL(tempa, tempd){
       renderer = new THREE.WebGLRenderer();
       element = renderer.domElement;
       container = document.getElementById('example');
+      loader.setZoom( 0 );
       loader.onPanoramaLoad = function () {
             var img_uri= this.canvas.toDataURL("image/png");
             var image = new Image();
