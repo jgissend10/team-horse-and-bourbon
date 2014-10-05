@@ -40,6 +40,7 @@ app.get('/db', function (request, response) {
 app.post('/handleSMS', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
   var resp = new twilio.TwimlResponse();
+  console.log("handling")
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     client.query("SELECT username FROM user_table WHERE phone = '" + req.body.From + "'", function(err, result) {
       done();
@@ -48,12 +49,14 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
       else
        {
        	if (typeof result.rows[0] != 'undefined') {
+       		console.log("found row")
        		resp.message("http://team-horse-and-bourbon.heroku.com/game?id="+result.rows[0].username+"&phone="+req.body.From);
   			res.writeHead(200, {
         		'Content-Type':'text/xml'
     		});
   			res.end(resp.toString());
        		} else {
+       		console.log("row not found")
        		var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
        		client.query("INSERT ('" + id +"', '" + req.body.From +"', 0) INTO user_table", function(err, result) {
       			done();
@@ -61,6 +64,7 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
       			 { console.error(err); res.send("Error " + err); }
       			else
        			{
+       			console.log("sending new id")
 	       		resp.message("http://team-horse-and-bourbon.heroku.com/game?id="+id+"&phone="+req.body.From);
 	  			res.writeHead(200, {
 	        		'Content-Type':'text/xml'
