@@ -20,13 +20,18 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
-app.get('/handleSMS', function(request, response) {
-  var twiml = new twilio.TwimlResponse();
+app.post('/handleSMS', function(request, response) {
+  if (twilio.validateExpressRequest(request, process.env.AUTH_TOKEN)) {
+        var twiml = new twilio.TwimlResponse();
 
-  twiml.message(request.param('body'));
+        twiml.message(request.param('body'));
 
-  response.type('text/xml');
-  response.send(twiml.toString());
+        response.type('text/xml');
+        response.send(twiml.toString());
+    }
+    else {
+        response.send('you are not twilio.  Buzz off.');
+    }
 })
 
 app.get('/smsTest', function(request, response) {
