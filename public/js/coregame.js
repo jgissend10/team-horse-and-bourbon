@@ -283,6 +283,10 @@ function FIREBALL(tempa, tempd){
      var progress = 10;
      var mesh;
 
+     this.getmesh = function(){
+       return mesh;
+     }
+
      this.init = function(){
           var texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,0,0) );
       
@@ -410,7 +414,7 @@ function FIREBALL(tempa, tempd){
         light.position.set( 0, 500, 0 );
         scene.add( light );
 
-      var mapB = THREE.ImageUtils.loadTexture( "img/cat.jpg" );
+      var mapB = THREE.ImageUtils.loadTexture( "img/cat.png" );
       var materialB = new THREE.SpriteMaterial( { map: mapB} );
 
       material = materialB.clone();
