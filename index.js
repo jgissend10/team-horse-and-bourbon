@@ -21,7 +21,7 @@ app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
 })
 
-if (false) { // make true for db
+if (true) { // make true for db
 var twilio = require('twilio');
 var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
@@ -117,6 +117,9 @@ app.get('/game', function (req, res) {
 
 io.on('connection', function (socket) {
   socket.on('location', function (data) {
+    console.log(data);
+  });
+  socket.on('player', function (data) {
     console.log(data);
   });
   socket.on('disconnect', function () {
