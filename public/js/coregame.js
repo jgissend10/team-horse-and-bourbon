@@ -174,7 +174,7 @@ function ENEMY(){
 
     var color = 0;
     var colorTime = 0;
-    var colorChangeTime = (parseInt(Math.random()*4)+1)*1000; 
+    var colorChangeTime = (parseInt(Math.random()*4)+4)*1000; 
 
     var telaDis = (parseInt(Math.random()*10)-5)*5;
     var teleTime = 0;
@@ -604,6 +604,13 @@ function FIREBALL(tempa, tempd){
       else
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xffFFFF);
+      intersects = raycaster.intersectObject( fireball.getmesh(), true );
+      if(intersects.length > 0){
+        pointerDistance = intersects[0].distance;
+        hit = true;
+        if(damage > 0)
+          fireball = null;
+      }  
       for(var i=0;i<enemyList.length;i++){  
         enemy = enemyList[i];
         intersects = raycaster.intersectObject( enemy.getmesh(), true );
