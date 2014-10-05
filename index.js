@@ -58,7 +58,7 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
        		} else {
        		console.log("row not found")
        		var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-       		client.query("INSERT ('" + id +"', '" + req.body.From +"', 0) INTO user_table", function(err, result) {
+       		client.query("INSERT INTO user_table VALUES ('" + id +"', '" + req.body.From +"', 0)", function(err, result) {
       			done();
       			if (err)
       			 { console.error(err); res.send("Error " + err); }
