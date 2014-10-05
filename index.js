@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var twilio = require('twilio');
 var client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
+var pg = require('pg');
+
 server.listen(process.env.PORT || 5000);
 
 //app.set('port', (process.env.PORT || 5000))
@@ -21,6 +23,18 @@ app.get('/', function(request, response) {
 
 app.get('/test', function(request, response) {
   response.sendFile(__dirname + '/locationTest.html')
+})
+
+app.get('/db', function (request, response) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query('SELECT * FROM test_table', function(err, result) {
+      done();
+      if (err)
+       { console.error(err); response.send("Error " + err); }
+      else
+       { response.send(result.rows); }
+    });
+  });
 })
 
 app.post('/handleSMS', urlencodedParser, function (req, res) {
