@@ -21,17 +21,13 @@ app.get('/test', function(request, response) {
 })
 
 app.post('/handleSMS', function(request, response) {
-  if (twilio.validateExpressRequest(request, process.env.AUTH_TOKEN)) {
-        var twiml = new twilio.TwimlResponse();
+    var twiml = new twilio.TwimlResponse();
 
-        twiml.message(request.param('body'));
+    twiml.message(request.param('body'));
 
-        response.type('text/xml');
-        response.send(twiml.toString());
-    }
-    else {
-        response.send('you are not twilio.  Buzz off.');
-    }
+    response.type('text/xml');
+    response.send(twiml.toString());
+    
 })
 
 app.get('/smsTest', function(request, response) {
