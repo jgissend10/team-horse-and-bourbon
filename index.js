@@ -44,7 +44,7 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
     client.query("SELECT username FROM user_table WHERE phone = '" + req.body.From + "'", function(err, result) {
       done();
       if (err)
-       { console.error(err); response.send("Error " + err); }
+       { console.error(err); res.send("Error " + err); }
       else
        {
        	if (typeof result.rows[0] != 'undefined') {
@@ -58,7 +58,7 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
        		client.query("INSERT ('" + id +"', '" + req.body.From +"', 0) INTO user_table", function(err, result) {
       			done();
       			if (err)
-      			 { console.error(err); response.send("Error " + err); }
+      			 { console.error(err); res.send("Error " + err); }
       			else
        			{
 	       		resp.message("http://team-horse-and-bourbon.heroku.com/game?id="+id+"&phone="+req.body.From);
