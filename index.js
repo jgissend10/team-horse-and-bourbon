@@ -47,11 +47,20 @@ app.post('/handleSMS', urlencodedParser, function (req, res) {
        { console.error(err); response.send("Error " + err); }
       else
        {
-       	resp.message("Welcome back! " + result.rows[0]);
-  		res.writeHead(200, {
-        	'Content-Type':'text/xml'
-    	});
-  		res.end(resp.toString()); 
+       	if (typeof result.rows[0] != 'undefined') {
+       		resp.message("Welcome back! " + result.rows[0].username);
+  			res.writeHead(200, {
+        		'Content-Type':'text/xml'
+    		});
+  			res.end(resp.toString());
+       		} else {
+       			resp.message("You're not registered yet!");
+  				res.writeHead(200, {
+        			'Content-Type':'text/xml'
+    			});
+  				res.end(resp.toString());
+       		}
+       	
         }
     });
   });
