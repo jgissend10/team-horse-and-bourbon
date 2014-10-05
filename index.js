@@ -26,7 +26,7 @@ app.get('/test', function(request, response) {
 app.post('/handleSMS', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
   var resp = new twilio.TwimlResponse();
-  resp.message(req.body.body);
+  resp.message(req.body.Body + " " + req.body.From);
   res.writeHead(200, {
         'Content-Type':'text/xml'
     });
