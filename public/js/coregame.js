@@ -607,7 +607,7 @@ function FIREBALL(tempa, tempd){
       if(fireball != null){
         intersects = raycaster.intersectObject( fireball.getmesh(), true );
         if(intersects.length > 0){
-          pointerDistance = intersects[0].distance;
+          //pointerDistance = intersects[0].distance;
           hit = true;
           var damage = gui.onAttack(0,dt);
           if(damage > 0)
