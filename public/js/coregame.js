@@ -2,7 +2,7 @@ var camera, scene, renderer;
     var effect, controls;
     var element, container;
     var cameraOrtho, sceneOrtho;
-
+var loader = new GSVPANO.PanoLoader();
     var clock = new THREE.Clock();
 var test;
 var cat;
@@ -19,6 +19,7 @@ var m3d;
 var pointerDistance = 0;
 var ground;
 var enemy;
+var skybox;
     init();
     animate();
 
@@ -75,7 +76,7 @@ function GUI(){
       this.attack += delta*1000;
       if(this.attack >= this.attackMax){
         //Console.log("Hit ;)");
-        damage = 3;
+        damage = num+1;
         this.attack = 0;
         this.active = 0;
         this.progress = 0;
@@ -151,8 +152,27 @@ function GUI(){
 function ENEMY(){
     
     var mesh;
+    var mesh2;
     var a = 0;
-    var speed = 1.0;
+    var activespeed = 0.5+parseInt(Math.random()*2);
+    var boostspeed = 1;
+    var distanceFrom = 20 + 10*parseInt(Math.random()*5);
+    var dir = 1;
+    if(Math.random()>.5)dir = -1;
+    var boostTime = 0;
+    var boostTimeMax = (parseInt(Math.random()*6)-3)*1000;
+    var boostspeedAdd = parseInt(Math.random()*6)-3;
+    var health = 2+parseInt(Math.random()*5);
+
+    var type = 3;//1+parseInt(Math.random()*3);
+
+    var color = 0;
+    var colorTime = 0;
+    var colorChangeTime = (parseInt(Math.random()*4)+1)*1000; 
+
+    var telaDis = (parseInt(Math.random()*10)-5)*5;
+    var teleTime = 0;
+    var teleChangeTime = (parseInt(Math.random()*4)+2)*1000; 
 
     this.getmesh = function(){
       return mesh;
@@ -170,25 +190,74 @@ function ENEMY(){
 
       scene.add(mesh);
 
+      texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,255,255) );
+      material = new THREE.SpriteMaterial( { map: texture } );
+      mesh2 = new THREE.Sprite( material );
+      mesh2.material.color.setHex(0x66FF66);
+      mesh2.scale.set( health, 1, 1 );
+       scene.add(mesh2);
+
     }
 
     this.update = function(delta){
       delta = delta*1000;
-      var scale = 40;
-      a +=delta/10000*speed;
+      var scale = distanceFrom;
+      a += dir*delta/10000*activespeed*boostspeed;
       var x = scale*Math.sin(a*90* Math.PI / 180);
       var z = scale*Math.cos(a*90* Math.PI / 180);
 
+      if(type ==2 && colorTime < 2){
+        color = parseInt(Math.random()*3)+1;
+        colorTime = colorChangeTime;
+      }
+      colorTime -= delta;
+      if(type ==3 && teleTime < 0){
+        a = a+telaDis*10000000;
+        teleTime = teleChangeTime;
+      }
+      teleTime -= delta;
+      if(color==0)mesh.material.color.setHex(0xFFFFFF);
+      if(color==1)mesh.material.color.setHex(0xFF6666);
+      if(color==2)mesh.material.color.setHex(0x66FF66);
+      if(color==3)mesh.material.color.setHex(0x6666FF);
       mesh.position.x = x;
       mesh.position.z = z;
       mesh.position.y = 10;
       
+      mesh2.position.x = x;
+      mesh2.position.z = z;
+      mesh2.position.y = 20;
+      mesh2.scale.set( health, 1, 1 );
       mesh.lookAt(new THREE.Vector3(0, 4, 0));
-      speed = 1;
+      boostTime -= delta;
+      if(boostTime < 0)
+      boostspeed = 1;
     }
 
     this.takeDamage = function(damage){
-      speed = 4.1;
+      boostTime = boostTimeMax;
+      boostspeed = boostspeedAdd;
+      if(color==0&&damage>0)
+        health--;
+      else if(damage>0){
+        if(color==1){
+          if(damage==1)health-=1;
+          if(damage==2)health-=2;
+        }
+        if(color==2){
+          if(damage==2)health-=1;
+          if(damage==3)health-=2;
+        }
+        if(color==3){
+          if(damage==3)health-=1;
+          if(damage==1)health-=2;
+        }
+      }
+      if(health<=0){
+        scene.remove(mesh);
+        scene.remove(mesh2);
+        
+      }
     }
 
 }
@@ -213,7 +282,19 @@ function ENEMY(){
       camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
       camera.position.set(0, 20, 0);
 
+      skybox = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( createColorImage(64,127,127,127) ) } ) );
+      skybox.doubleSided = true;
+      scene.add( skybox );
 
+      var myLatlng = { lat: 51.50700703827454, lng: -0.12791916931155356 };
+      loader.onPanoramaLoad = function() {
+       
+        skybox.material.map = new THREE.Texture( this.canvas ); 
+        skybox.material.map.needsUpdate = true;
+        
+      };
+
+      //loader.load( myLatlng );
       enemy = new ENEMY();
       enemy.init(scene);
 
@@ -422,7 +503,7 @@ function ENEMY(){
         pointerDistance = intersects[0].distance;
         
         hit = true;
-        gui.onCharge(1,dt);
+        gui.onCharge(2,dt);
         for(var i=0;i<attackbtn2.children.length;i++)
           attackbtn2.children[i].material.color.setHex(0xBBBBBB);
       }
@@ -434,7 +515,7 @@ function ENEMY(){
       if(intersects.length > 0){
         pointerDistance = intersects[0].distance;
         hit = true;
-        gui.onCharge(2,dt);
+        gui.onCharge(1,dt);
         for(var i=0;i<attackbtn3.children.length;i++)
           attackbtn3.children[i].material.color.setHex(0xBBBBBB);
       }
