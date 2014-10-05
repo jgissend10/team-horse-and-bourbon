@@ -2,7 +2,7 @@ var camera, scene, renderer;
     var effect, controls;
     var element, container;
     var cameraOrtho, sceneOrtho;
-var loader = new GSVPANO.PanoLoader();
+
     var clock = new THREE.Clock();
 var test;
 var cat;
@@ -282,17 +282,17 @@ function ENEMY(){
       camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
       camera.position.set(0, 20, 0);
 
-      skybox = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( createColorImage(64,127,127,127) ) } ) );
-      skybox.doubleSided = true;
-      scene.add( skybox );
+     // skybox = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( createColorImage(64,127,127,127) ) } ) );
+     // skybox.doubleSided = true;
+     // scene.add( skybox );
 
-      var myLatlng = { lat: 51.50700703827454, lng: -0.12791916931155356 };
-      loader.onPanoramaLoad = function() {
+      //var myLatlng = { lat: 51.50700703827454, lng: -0.12791916931155356 };
+      //loader.onPanoramaLoad = function() {
        
-        skybox.material.map = new THREE.Texture( this.canvas ); 
-        skybox.material.map.needsUpdate = true;
+      //  skybox.material.map = new THREE.Texture( this.canvas ); 
+      //  skybox.material.map.needsUpdate = true;
         
-      };
+      //};
 
       //loader.load( myLatlng );
       enemy = new ENEMY();
