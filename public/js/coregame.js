@@ -59,7 +59,7 @@ function GUI(){
 
       var texture = THREE.ImageUtils.loadTexture( createColorImage(64,0,0,0) );
       var material = new THREE.SpriteMaterial( { map: texture } );
-      var geometry = new THREE.PlaneGeometry(2, 2);
+      var geometry = new THREE.PlaneGeometry(5, 5);
 
       mesh = new THREE.Sprite( material );
       
@@ -82,8 +82,8 @@ function GUI(){
       }
       var point = new THREE.Vector3( 0, 0, -1 );
       point.applyQuaternion( camera.quaternion );
-      point.multiplyScalar(5);
-      point.subVectors(camera.position,point);
+      point.multiplyScalar(20);
+      point.addVectors(camera.position,point);
      // mesh.position.set(,point.y,point.z);//= new THREE.Vector3( 4, 5, -1 );//;
       mesh.position.x = point.x;
       mesh.position.z = point.z;
