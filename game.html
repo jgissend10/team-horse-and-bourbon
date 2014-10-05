@@ -27,6 +27,7 @@
   function showPosition(position) {
       x.innerHTML="Latitude: " + position.coords.latitude + 
       "<br>Longitude: " + position.coords.longitude;
+      console.log(position);
       socket.emit('location', position);	
   }
   window.setInterval(function() {getLocation();}, 1000);});
