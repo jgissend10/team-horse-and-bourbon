@@ -10,6 +10,12 @@ var attackbtn1;
 var attackbtn2;
 var attackbtn3;
 var gui;
+var m1;
+var m2;
+var m3;
+var m1d;
+var m2d;
+var m3d;
     init();
     animate();
 
@@ -26,6 +32,8 @@ function GUI(){
     this.attack = 0;
     this.attackMax = 2000;
 
+    this.didMove = false;
+
     var mesh;
 
     this.onCharge = function(num, delta){
@@ -35,9 +43,10 @@ function GUI(){
         this.progressFocus = num;
         this.progress = 0;
       }
-      this.progress += delta;
+      this.progress += delta*1000;
       if(this.progress >= this.progressMAX)
         this.active = this.activeMax;
+      this.didMove = true;
 
     }
 
@@ -53,11 +62,12 @@ function GUI(){
       this.attack += delta;
       if(this.attack >= this.attackMax)
         Console.log("Hit ;)");
+      this.didMove = true;
     }
 
     this.init = function(scene){
 
-      var texture = THREE.ImageUtils.loadTexture( createColorImage(64,0,0,0) );
+      var texture = THREE.ImageUtils.loadTexture( createColorImage(64,255,255,255) );
       var material = new THREE.SpriteMaterial( { map: texture } );
       var geometry = new THREE.PlaneGeometry(5, 5);
 
@@ -70,15 +80,21 @@ function GUI(){
     }
 
     this.update = function(delta){
-      if(this.active != 0)
-      {
-         this.active -= delta;
-         if(this.active <= 0){
-            this.active = 0;
-          }
-      }
-      else{
-         this.progress -= delta;
+      delta = delta*1000;
+      if(!this.didMove){
+        if(this.active != 0)
+        {
+           this.active -= delta;
+           if(this.active <= 0){
+              this.active = 0;
+            }
+        }
+        else{
+           this.progress -= delta;
+           if(this.progress < 0)
+              this.progress = 0;
+           
+        }
       }
       var point = new THREE.Vector3( 0, 0, -1 );
       point.applyQuaternion( camera.quaternion );
@@ -89,6 +105,8 @@ function GUI(){
       mesh.position.z = point.z;
       mesh.position.y = point.y;
       mesh.lookAt(camera.position);
+      mesh.material.opacity = this.progress*1.0/this.progressMAX;
+      this.didMove = false;
     }
 
   
@@ -229,9 +247,21 @@ function GUI(){
       var t3 = THREE.ImageUtils.loadTexture(
         createColorImage(64,40,40,230)
       );
-      var m1  = new THREE.MeshBasicMaterial( { map: t1 } );
-      var m2  = new THREE.MeshBasicMaterial( { map: t2 } );
-      var m3  = new THREE.MeshBasicMaterial( { map: t3 } );
+      m1  = new THREE.MeshBasicMaterial( { map: t1 } );
+      m2  = new THREE.MeshBasicMaterial( { map: t2 } );
+      m3  = new THREE.MeshBasicMaterial( { map: t3 } );
+      t1 = THREE.ImageUtils.loadTexture(
+        createColorImage(64,180,40,40)
+      );
+      t2 = THREE.ImageUtils.loadTexture(
+        createColorImage(64,40,180,40)
+      );
+       t3 = THREE.ImageUtils.loadTexture(
+        createColorImage(64,40,40,180)
+      );
+      m1d  = new THREE.MeshBasicMaterial( { map: t1 } );
+      m2d  = new THREE.MeshBasicMaterial( { map: t2 } );
+      m3d  = new THREE.MeshBasicMaterial( { map: t3 } );
 
       for(var a = 0;a<4;a++){
         var scale = 15;
@@ -292,14 +322,37 @@ function GUI(){
       //point.applyMatrix4( camera.matrixWorld );
       var raycaster = new THREE.Raycaster( camera.position, point );
       var intersects = raycaster.intersectObject( attackbtn1, true );
-      if(intersects.length > 0)
+      if(intersects.length > 0){
         console.log("RED");
+        gui.onCharge(0,dt);
+        for(var i=0;i<attackbtn1.children.length;i++)
+          attackbtn1.children[i].material.color.setHex(0xBBBBBB);
+      }
+      else
+        for(var i=0;i<attackbtn1.children.length;i++)
+          attackbtn1.children[i].material.color.setHex(0xffFFFF);
+        
       intersects = raycaster.intersectObject( attackbtn2, true );
-      if(intersects.length > 0)
+      if(intersects.length > 0){
         console.log("GREEN");
+        gui.onCharge(1,dt);
+        for(var i=0;i<attackbtn2.children.length;i++)
+          attackbtn2.children[i].material.color.setHex(0xBBBBBB);
+      }
+      else
+        for(var i=0;i<attackbtn2.children.length;i++)
+          attackbtn2.children[i].material.color.setHex(0xffFFFF);
+
       intersects = raycaster.intersectObject( attackbtn3, true );
-      if(intersects.length > 0)
+      if(intersects.length > 0){
         console.log("BLUE");
+        gui.onCharge(2,dt);
+        for(var i=0;i<attackbtn3.children.length;i++)
+          attackbtn3.children[i].material.color.setHex(0xBBBBBB);
+      }
+      else
+        for(var i=0;i<attackbtn3.children.length;i++)
+          attackbtn3.children[i].material.color.setHex(0xffFFFF);
 
       
       cat.lookAt(camera.position);
