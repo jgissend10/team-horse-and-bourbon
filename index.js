@@ -103,6 +103,11 @@ client.sendMessage({
 })
 */
 
+app.get('/game', urlencodedParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  res.send(req.body.id + " " + req.body.phone);
+ })
+
 io.on('connection', function (socket) {
   socket.on('location', function (data) {
     console.log(data);
